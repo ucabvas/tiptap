@@ -2,12 +2,14 @@ import { useState } from 'react'
 import MixGame from './MixGame'
 import MemoryGame from './MemoryGame'
 import ThreeInARow from './ThreeInARow'
+import QuickTap from './QuickTap'
 import './App.css'
 
 const GAMES = {
   mix: MixGame,
   memory: MemoryGame,
   row: ThreeInARow,
+  tap: QuickTap,
 }
 
 export default function App() {
@@ -44,6 +46,14 @@ export default function App() {
             <i style={{ background: '#7ec8f2' }} />
             <i />
             <i style={{ background: '#ff8c1a' }} />
+          </span>
+        </button>
+
+        <button className="tile" onClick={() => setGame('tap')} aria-label="Quick tap race">
+          <span className="tile-art tap-art">
+            <i style={{ background: '#ff8c1a' }} />
+            <i className="spark">⭐</i>
+            <i style={{ background: '#7ec8f2' }} />
           </span>
         </button>
       </div>

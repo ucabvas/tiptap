@@ -16,9 +16,9 @@
 }
 
 .home {
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: clamp(1.5rem, 6vw, 4rem);
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: clamp(1rem, 4vw, 2.5rem);
 }
 
 .tile {
@@ -38,7 +38,7 @@
 
 .tile-art {
   display: grid;
-  width: clamp(110px, 30vw, 190px);
+  width: clamp(96px, 22vw, 150px);
   aspect-ratio: 1;
   place-content: center;
 }
@@ -77,6 +77,26 @@
   aspect-ratio: 1;
   border-radius: 26%;
   background: #dedee6;
+}
+
+.tap-art {
+  grid-auto-flow: column;
+  align-items: center;
+  gap: clamp(0.2rem, 1vw, 0.5rem);
+}
+
+.tap-art i {
+  width: clamp(34px, 9vw, 58px);
+  height: clamp(46px, 12vw, 78px);
+  border-radius: 28%;
+}
+
+.tap-art .spark {
+  display: grid;
+  place-content: center;
+  width: auto;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  font-style: normal;
 }
 
 .memory-art i {

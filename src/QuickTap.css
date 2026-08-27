@@ -1,0 +1,58 @@
+.ring {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.6rem, 2vw, 1.5rem);
+}
+
+.pad {
+  display: grid;
+  place-content: center;
+  width: clamp(120px, 30vw, 240px);
+  height: clamp(150px, 34vh, 280px);
+  border: none;
+  border-radius: 2rem;
+  cursor: pointer;
+  font-size: clamp(3rem, 12vw, 6rem);
+  line-height: 1;
+  background: color-mix(in srgb, var(--player-color) 30%, #eeeef4);
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.1);
+  transition: background 150ms ease, transform 120ms ease;
+}
+
+.pad.go {
+  background: color-mix(in srgb, #2fb457 45%, #eeeef4);
+  animation: waiting 400ms ease-in-out infinite alternate;
+}
+
+.pad.scored {
+  background: color-mix(in srgb, var(--player-color) 70%, #ffffff);
+}
+
+.pad:active {
+  transform: translateY(8px) scale(0.97);
+  box-shadow: none;
+}
+
+.star-light {
+  display: grid;
+  place-content: center;
+  width: clamp(80px, 18vw, 140px);
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: clamp(2rem, 7vw, 3.5rem);
+  line-height: 1;
+  color: #6b6b77;
+  background: #eeeef4;
+  transition: background 150ms ease;
+}
+
+.star-light.set {
+  background: #ffd9c2;
+}
+
+.star-light.go {
+  background: #ffe9a8;
+  animation: waiting 300ms ease-in-out infinite alternate;
+}
