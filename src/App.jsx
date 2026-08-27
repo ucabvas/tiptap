@@ -1,60 +1,45 @@
 import { useState } from 'react'
-import { COLORS, colorById, mix } from './colors'
+import MixGame from './MixGame'
+import MemoryGame from './MemoryGame'
 import './App.css'
 
+const GAMES = {
+  mix: MixGame,
+  memory: MemoryGame,
+}
+
 export default function App() {
-  const [picks, setPicks] = useState([])
+  const [game, setGame] = useState(null)
+  const Game = GAMES[game]
 
-  const pick = (id) => {
-    setPicks((prev) => (prev.length === 2 ? [id] : [...prev, id]))
+  if (!Game) {
+    return (
+      <div className="app home">
+        <button className="tile" onClick={() => setGame('mix')} aria-label="Mixing colors">
+          <span className="tile-art mix-art">
+            <i style={{ background: '#ffd60a' }} />
+            <i style={{ background: '#1d75d6' }} />
+          </span>
+        </button>
+
+        <button className="tile" onClick={() => setGame('memory')} aria-label="Matching pairs">
+          <span className="tile-art memory-art">
+            <i style={{ background: '#e63946' }} />
+            <i style={{ background: '#2fb457' }} />
+            <i style={{ background: '#2fb457' }} />
+            <i style={{ background: '#e63946' }} />
+          </span>
+        </button>
+      </div>
+    )
   }
-
-  const [a, b] = picks
-  const result = a && b ? mix(a, b) : null
 
   return (
     <div className="app">
-      <div className="equation">
-        <Slot id={a} />
-        <span className="sign">+</span>
-        <Slot id={b} />
-        <span className="sign">=</span>
-        <div
-          className={`slot result ${result ? 'pop' : ''}`}
-          key={result ? result.hex : 'empty'}
-          style={result ? { background: result.hex } : undefined}
-        />
-      </div>
-
-      <p className="answer">{result ? result.name : ' '}</p>
-
-      <div className="palette">
-        {COLORS.map((c) => (
-          <button
-            key={c.id}
-            className="chip"
-            aria-label={c.name}
-            onClick={() => pick(c.id)}
-          >
-            <span className="swatch" style={{ background: c.hex }} />
-            <span className="chip-name">{c.name}</span>
-          </button>
-        ))}
-      </div>
-
-      <button className="reset" onClick={() => setPicks([])} aria-label="Start over">
-        ↺
+      <button className="back" onClick={() => setGame(null)} aria-label="Back to the games">
+        ←
       </button>
+      <Game />
     </div>
-  )
-}
-
-function Slot({ id }) {
-  const color = id ? colorById(id) : null
-  return (
-    <div
-      className="slot"
-      style={color ? { background: color.hex } : undefined}
-    />
   )
 }

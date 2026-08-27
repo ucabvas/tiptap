@@ -1,0 +1,51 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.6rem, 2vw, 1.2rem);
+}
+
+.card {
+  width: clamp(66px, 19vw, 130px);
+  aspect-ratio: 1;
+  border: none;
+  padding: 0;
+  border-radius: 22%;
+  cursor: pointer;
+  background: #e2e2ea;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12);
+  transition: background 220ms ease, transform 220ms ease;
+}
+
+.card::after {
+  content: '';
+  display: block;
+  width: 34%;
+  aspect-ratio: 1;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.08);
+  transition: opacity 160ms ease;
+}
+
+.card.up {
+  background: var(--card-color);
+  transform: rotateY(180deg);
+}
+
+.card.up::after {
+  opacity: 0;
+}
+
+.card:active {
+  transform: scale(0.94);
+}
+
+.won .card {
+  animation: cheer 700ms ease-in-out infinite alternate;
+  animation-delay: calc(var(--i) * 60ms);
+}
+
+@keyframes cheer {
+  from { transform: translateY(0) rotate(0); }
+  to { transform: translateY(-14px) rotate(6deg); }
+}
