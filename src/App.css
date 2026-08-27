@@ -5,14 +5,14 @@
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
-  padding: 1.5rem;
+  padding: clamp(0.75rem, 2vh, 1.5rem);
 }
 
 .game {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: clamp(0.75rem, 2.5vh, 1.5rem);
 }
 
 .home {
@@ -96,10 +96,10 @@
   border: none;
   background: #e9e9ef;
   color: #6b6b77;
-  font-size: 2.5rem;
+  font-size: 2rem;
   line-height: 1;
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
   border-radius: 50%;
   cursor: pointer;
 }
