@@ -50,23 +50,43 @@
 .palette {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: clamp(0.75rem, 3vw, 1.5rem);
+  gap: clamp(0.6rem, 2vw, 1.1rem);
+}
+
+@media (min-width: 760px) {
+  .palette {
+    grid-template-columns: repeat(8, 1fr);
+  }
 }
 
 .chip {
-  width: clamp(70px, 18vw, 120px);
-  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
   border: none;
-  border-radius: 50%;
+  background: none;
   padding: 0;
   cursor: pointer;
-  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12), inset 0 0 0 5px rgba(0, 0, 0, 0.06);
   transition: transform 120ms ease;
+}
+
+.swatch {
+  display: block;
+  width: clamp(56px, 14vw, 100px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12), inset 0 0 0 5px rgba(0, 0, 0, 0.06);
+}
+
+.chip-name {
+  font-size: clamp(0.75rem, 1.6vw, 1rem);
+  font-weight: 700;
+  color: #6b6b77;
 }
 
 .chip:active {
   transform: translateY(6px) scale(0.94);
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0.12), inset 0 0 0 5px rgba(0, 0, 0, 0.06);
 }
 
 .reset {

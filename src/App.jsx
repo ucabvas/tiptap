@@ -33,10 +33,12 @@ export default function App() {
           <button
             key={c.id}
             className="chip"
-            style={{ background: c.hex }}
             aria-label={c.name}
             onClick={() => pick(c.id)}
-          />
+          >
+            <span className="swatch" style={{ background: c.hex }} />
+            <span className="chip-name">{c.name}</span>
+          </button>
         ))}
       </div>
 
