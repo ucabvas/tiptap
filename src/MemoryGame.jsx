@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { COLORS } from './colors'
+import { PlayerBar, PlayerPicker, SEATS, usePlayers } from './Players'
 import './MemoryGame.css'
 
 // Twelve pairs plus one lucky star fill the 5x5 board.
@@ -9,10 +10,6 @@ const DECK = [
 ]
 
 const STAR = 'star'
-
-const FACES = ['🦊', '🐼', '🐸', '🦁', '🐵', '🐷', '🐙', '🦄', '🐨', '🐝']
-
-const SEATS = [{ color: '#ff8c1a' }, { color: '#7ec8f2' }]
 
 const hexOf = (id) =>
   id === STAR ? '#ffe9a8' : COLORS.find((c) => c.id === id).hex
@@ -33,8 +30,7 @@ function shuffledCards() {
 }
 
 export default function MemoryGame() {
-  const [faces, setFaces] = useState([null, null])
-  const [picking, setPicking] = useState(0)
+  const { faces, picking, setPicking, choose } = usePlayers()
   const [cards, setCards] = useState(shuffledCards)
   const [flipped, setFlipped] = useState([])
   const [won, setWon] = useState([[], []])
@@ -83,70 +79,30 @@ export default function MemoryGame() {
     setTurn(0)
   }
 
-  const choose = (face) => {
-    setFaces((prev) => prev.map((f, i) => (i === picking ? face : f)))
-    setPicking(picking === 0 && !faces[1] ? 1 : null)
-  }
-
   if (picking !== null) {
     return (
       <div className="game memory-game">
-        <div className="seats">
-          {SEATS.map((seat, i) => (
-            <span
-              key={i}
-              className={`seat ${picking === i ? 'choosing' : ''}`}
-              style={{ '--player-color': seat.color }}
-            >
-              {faces[i] || ''}
-            </span>
-          ))}
-        </div>
-
-        <div className="faces">
-          {FACES.filter((face) => !faces.includes(face) || faces[picking] === face).map(
-            (face) => (
-              <button
-                key={face}
-                className="face-pick"
-                aria-label={`choose ${face}`}
-                onClick={() => choose(face)}
-              >
-                {face}
-              </button>
-            )
-          )}
-        </div>
+        <PlayerPicker faces={faces} picking={picking} onChoose={choose} />
       </div>
     )
   }
 
   return (
     <div className="game memory-game">
-      <div className="players">
-        {SEATS.map((seat, i) => (
-          <button
-            key={i}
-            className={`player ${!over && turn === i ? 'active' : ''} ${
-              over && won[i].length === best ? 'winner' : ''
-            }`}
-            style={{ '--player-color': seat.color }}
-            aria-label={`player ${i + 1}, change animal`}
-            onClick={() => setPicking(i)}
-          >
-            <span className="face">{faces[i]}</span>
-            <span className="pile">
-              {won[i].map((colorId) => (
-                <i
-                  key={colorId}
-                  className={colorId === STAR ? 'star-dot' : ''}
-                  style={{ background: hexOf(colorId) }}
-                />
-              ))}
-            </span>
-          </button>
-        ))}
-      </div>
+      <PlayerBar
+        faces={faces}
+        turn={turn}
+        over={over}
+        winners={SEATS.map((_, i) => over && won[i].length === best)}
+        piles={won.map((pile) =>
+          pile.map((colorId) => ({
+            key: colorId,
+            color: hexOf(colorId),
+            pale: colorId === STAR,
+          }))
+        )}
+        onPick={setPicking}
+      />
 
       <div className="board">
         {cards.map((card, index) => {

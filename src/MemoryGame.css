@@ -1,56 +1,3 @@
-.players {
-  display: flex;
-  gap: clamp(1rem, 5vw, 3rem);
-}
-
-.player {
-  border: none;
-  background: none;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem 0.75rem;
-  border-radius: 1.5rem;
-  opacity: 0.45;
-  transition: opacity 200ms ease, transform 200ms ease;
-}
-
-.player.active,
-.player.winner {
-  opacity: 1;
-  background: color-mix(in srgb, var(--player-color) 22%, transparent);
-}
-
-.player.active {
-  transform: scale(1.06);
-}
-
-.player.winner {
-  animation: cheer 700ms ease-in-out infinite alternate;
-}
-
-.face {
-  font-size: clamp(2.2rem, 7vw, 3.2rem);
-  line-height: 1;
-  filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.12));
-}
-
-.pile {
-  display: flex;
-  gap: 0.3rem;
-  min-height: 1rem;
-}
-
-.pile i {
-  display: block;
-  width: clamp(0.7rem, 2vw, 1rem);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.08);
-}
-
 .board {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -93,11 +40,6 @@
   transform: scale(0.94);
 }
 
-@keyframes cheer {
-  from { transform: translateY(0) rotate(-3deg); }
-  to { transform: translateY(-10px) rotate(3deg); }
-}
-
 .card.star.up {
   background: radial-gradient(circle at 50% 40%, #fffdf2, var(--card-color));
 }
@@ -107,57 +49,4 @@
   display: block;
   font-size: clamp(1.4rem, 4vw, 2.4rem);
   line-height: 1;
-}
-
-.star-dot {
-  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.2);
-}
-
-.seats {
-  display: flex;
-  gap: clamp(1rem, 5vw, 3rem);
-}
-
-.seat {
-  display: grid;
-  place-content: center;
-  width: clamp(4rem, 14vw, 6rem);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #f2f2f7;
-  font-size: clamp(2rem, 7vw, 3rem);
-  line-height: 1;
-}
-
-.seat.choosing {
-  background: color-mix(in srgb, var(--player-color) 30%, transparent);
-  animation: waiting 900ms ease-in-out infinite alternate;
-}
-
-@keyframes waiting {
-  from { transform: scale(1); }
-  to { transform: scale(1.12); }
-}
-
-.faces {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: clamp(0.5rem, 2vw, 1.2rem);
-}
-
-.face-pick {
-  border: none;
-  background: #f2f2f7;
-  border-radius: 28%;
-  width: clamp(56px, 15vw, 100px);
-  aspect-ratio: 1;
-  font-size: clamp(1.8rem, 6vw, 3rem);
-  line-height: 1;
-  cursor: pointer;
-  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.1);
-}
-
-.face-pick:active {
-  transform: translateY(6px) scale(0.94);
-  box-shadow: none;
 }

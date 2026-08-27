@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import MixGame from './MixGame'
 import MemoryGame from './MemoryGame'
+import ThreeInARow from './ThreeInARow'
 import './App.css'
 
 const GAMES = {
   mix: MixGame,
   memory: MemoryGame,
+  row: ThreeInARow,
 }
 
 export default function App() {
@@ -28,6 +30,20 @@ export default function App() {
             <i style={{ background: '#2fb457' }} />
             <i style={{ background: '#2fb457' }} />
             <i style={{ background: '#e63946' }} />
+          </span>
+        </button>
+
+        <button className="tile" onClick={() => setGame('row')} aria-label="Three in a row">
+          <span className="tile-art row-art">
+            <i style={{ background: '#ff8c1a' }} />
+            <i />
+            <i style={{ background: '#7ec8f2' }} />
+            <i />
+            <i style={{ background: '#ff8c1a' }} />
+            <i />
+            <i style={{ background: '#7ec8f2' }} />
+            <i />
+            <i style={{ background: '#ff8c1a' }} />
           </span>
         </button>
       </div>

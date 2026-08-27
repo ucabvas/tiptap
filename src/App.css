@@ -67,6 +67,18 @@
   gap: clamp(0.5rem, 2vw, 0.9rem);
 }
 
+.row-art {
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.3rem, 1.2vw, 0.6rem);
+}
+
+.row-art i {
+  width: clamp(28px, 8vw, 52px);
+  aspect-ratio: 1;
+  border-radius: 26%;
+  background: #dedee6;
+}
+
 .memory-art i {
   width: clamp(48px, 13vw, 85px);
   aspect-ratio: 1;

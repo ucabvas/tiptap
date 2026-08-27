@@ -1,0 +1,36 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.5rem, 1.8vw, 1rem);
+}
+
+.spot {
+  display: grid;
+  place-content: center;
+  width: clamp(76px, 20vw, 130px);
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 24%;
+  padding: 0;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--player-color) 26%, #eeeef4);
+  font-size: clamp(2.4rem, 9vw, 4rem);
+  line-height: 1;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.1);
+  transition: background 200ms ease, transform 160ms ease;
+}
+
+.spot:active {
+  transform: translateY(6px) scale(0.95);
+  box-shadow: none;
+}
+
+.spot.shine {
+  animation: shine 600ms ease-in-out infinite alternate;
+  animation-delay: calc(var(--i) * 80ms);
+}
+
+@keyframes shine {
+  from { transform: scale(1) rotate(-2deg); }
+  to { transform: scale(1.1) rotate(2deg); }
+}
