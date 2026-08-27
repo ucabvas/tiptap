@@ -6,16 +6,18 @@
 
 .pad {
   display: grid;
-  place-content: center;
+  place-items: center;
+  align-content: center;
+  gap: 0.6rem;
   width: clamp(120px, 30vw, 240px);
   height: clamp(150px, 34vh, 280px);
   border: none;
   border-radius: 2rem;
   cursor: pointer;
-  font-size: clamp(3rem, 12vw, 6rem);
-  line-height: 1;
   background: color-mix(in srgb, var(--player-color) 30%, #eeeef4);
   box-shadow: 0 8px 0 rgba(0, 0, 0, 0.1);
+  -webkit-user-select: none;
+  user-select: none;
   transition: background 150ms ease, transform 120ms ease;
 }
 
@@ -55,4 +57,23 @@
 .star-light.go {
   background: #ffe9a8;
   animation: waiting 300ms ease-in-out infinite alternate;
+}
+
+.pad-face {
+  font-size: clamp(3rem, 12vw, 6rem);
+  line-height: 1;
+}
+
+/* The shift key each player thumps. */
+.key-hint {
+  display: grid;
+  place-content: center;
+  min-width: 3.2rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.6rem;
+  background: rgba(255, 255, 255, 0.7);
+  color: #6b6b77;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.12);
 }
