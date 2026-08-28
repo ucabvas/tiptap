@@ -124,6 +124,24 @@
   background: #b9b9c4;
 }
 
+.sort-art {
+  gap: clamp(0.3rem, 1.5vw, 0.6rem);
+  place-content: center;
+}
+
+.sort-art .drop {
+  width: clamp(28px, 7vw, 44px);
+  aspect-ratio: 1;
+  margin: 0 auto;
+}
+
+.sort-art .pot {
+  width: clamp(56px, 15vw, 90px);
+  height: clamp(36px, 9vw, 56px);
+  border-radius: 0.4rem 0.4rem 1.2rem 1.2rem;
+  opacity: 0.75;
+}
+
 .memory-art i {
   width: clamp(48px, 13vw, 85px);
   aspect-ratio: 1;

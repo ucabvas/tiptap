@@ -1,0 +1,74 @@
+.blob-shelf {
+  display: grid;
+  place-items: center;
+  min-height: clamp(90px, 20vh, 140px);
+}
+
+.blob {
+  width: clamp(64px, 16vw, 110px);
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  cursor: grab;
+  touch-action: none;
+  box-shadow: 0 7px 0 rgba(0, 0, 0, 0.14), inset 0 0 0 6px rgba(255, 255, 255, 0.25);
+  animation: pop-in 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.blob.held {
+  cursor: grabbing;
+  transform-origin: center;
+  scale: 1.12;
+  animation: none;
+  box-shadow: 0 14px 22px rgba(0, 0, 0, 0.22), inset 0 0 0 6px rgba(255, 255, 255, 0.25);
+}
+
+@keyframes pop-in {
+  from { transform: scale(0.3); }
+}
+
+.buckets {
+  display: flex;
+  gap: clamp(0.6rem, 3vw, 1.6rem);
+}
+
+.bucket {
+  display: grid;
+  place-items: center;
+  width: clamp(70px, 18vw, 130px);
+  height: clamp(80px, 20vh, 140px);
+  border-radius: 1rem 1rem 2.5rem 2.5rem;
+  background: color-mix(in srgb, var(--bucket-color) 82%, #ffffff);
+  box-shadow: inset 0 14px 0 rgba(0, 0, 0, 0.12), 0 7px 0 rgba(0, 0, 0, 0.1);
+  transition: transform 160ms ease;
+}
+
+.bucket.bump {
+  animation: shake 380ms ease-in-out;
+}
+
+.bucket.full {
+  animation: gulp 500ms ease-in-out;
+}
+
+.catch {
+  width: 45%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  animation: sink 500ms ease-in forwards;
+}
+
+@keyframes gulp {
+  40% { transform: scale(1.12, 0.9); }
+}
+
+@keyframes sink {
+  to { transform: translateY(30%) scale(0.2); opacity: 0; }
+}
+
+@keyframes shake {
+  25% { transform: translateX(-9px); }
+  75% { transform: translateX(9px); }
+}

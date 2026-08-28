@@ -4,6 +4,7 @@ import MemoryGame from './MemoryGame'
 import ThreeInARow from './ThreeInARow'
 import QuickTap from './QuickTap'
 import CountGame from './CountGame'
+import DragSort from './DragSort'
 import './App.css'
 
 const GAMES = {
@@ -12,6 +13,7 @@ const GAMES = {
   row: ThreeInARow,
   tap: QuickTap,
   count: CountGame,
+  sort: DragSort,
 }
 
 export default function App() {
@@ -67,6 +69,13 @@ export default function App() {
               <i />
               <i />
             </span>
+          </span>
+        </button>
+
+        <button className="tile" onClick={() => setGame('sort')} aria-label="Sorting game">
+          <span className="tile-art sort-art">
+            <i className="drop" style={{ background: '#2fb457' }} />
+            <i className="pot" style={{ background: '#2fb457' }} />
           </span>
         </button>
       </div>
