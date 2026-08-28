@@ -39,7 +39,10 @@
 
 .pile {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 0.3rem;
+  max-width: clamp(7rem, 22vw, 12rem);
   min-height: 1rem;
 }
 
@@ -107,4 +110,9 @@
 .face-pick:active {
   transform: translateY(6px) scale(0.94);
   box-shadow: none;
+}
+
+.pile-face {
+  font-size: clamp(0.8rem, 2.2vw, 1.1rem);
+  line-height: 1;
 }

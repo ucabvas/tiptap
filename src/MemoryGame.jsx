@@ -1,26 +1,19 @@
 import { useEffect, useState } from 'react'
-import { COLORS } from './colors'
 import { PlayerBar, PlayerPicker, SEATS, usePlayers } from './Players'
 import './MemoryGame.css'
 
 // Twelve pairs plus one lucky star fill the 5x5 board.
-const DECK = [
-  'red', 'orange', 'yellow', 'lime', 'green', 'teal',
-  'skyblue', 'blue', 'purple', 'magenta', 'pink', 'brown',
-]
+const DECK = ['🐶', '🐱', '🐰', '🐢', '🍎', '🍌', '🍓', '🚗', '🚀', '⚽', '🌻', '🎈']
 
-const STAR = 'star'
-
-const hexOf = (id) =>
-  id === STAR ? '#ffe9a8' : COLORS.find((c) => c.id === id).hex
+const STAR = '⭐'
 
 function shuffledCards() {
   const cards = [
-    ...DECK.flatMap((colorId) => [
-      { key: `${colorId}-a`, colorId },
-      { key: `${colorId}-b`, colorId },
+    ...DECK.flatMap((face) => [
+      { key: `${face}-a`, face },
+      { key: `${face}-b`, face },
     ]),
-    { key: STAR, colorId: STAR },
+    { key: STAR, face: STAR },
   ]
   for (let i = cards.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
@@ -43,10 +36,8 @@ export default function MemoryGame() {
   useEffect(() => {
     if (flipped.length < 2) return
     const [a, b] = flipped
-    if (cards[a].colorId === cards[b].colorId) {
-      setWon((prev) =>
-        prev.map((pile, i) => (i === turn ? [...pile, cards[a].colorId] : pile))
-      )
+    if (cards[a].face === cards[b].face) {
+      setWon((prev) => prev.map((pile, i) => (i === turn ? [...pile, cards[a].face] : pile)))
       setFlipped([])
       return
     }
@@ -63,9 +54,9 @@ export default function MemoryGame() {
   const flip = (index) => {
     const card = cards[index]
     if (flipped.length === 2 || flipped.includes(index)) return
-    if (collected.includes(card.colorId)) return
+    if (collected.includes(card.face)) return
     // The star belongs to whoever finds it, and they carry on.
-    if (card.colorId === STAR) {
+    if (card.face === STAR) {
       setWon((prev) => prev.map((pile, i) => (i === turn ? [...pile, STAR] : pile)))
       return
     }
@@ -94,27 +85,22 @@ export default function MemoryGame() {
         turn={turn}
         over={over}
         winners={SEATS.map((_, i) => over && won[i].length === best)}
-        piles={won.map((pile) =>
-          pile.map((colorId) => ({
-            key: colorId,
-            color: hexOf(colorId),
-            pale: colorId === STAR,
-          }))
-        )}
+        piles={won.map((pile) => pile.map((face) => ({ key: face, face })))}
         onPick={setPicking}
       />
 
       <div className="board">
         {cards.map((card, index) => {
-          const isUp = flipped.includes(index) || collected.includes(card.colorId)
+          const isUp = flipped.includes(index) || collected.includes(card.face)
           return (
             <button
               key={card.key}
-              className={`card ${isUp ? 'up' : ''} ${card.colorId === STAR ? 'star' : ''}`}
-              style={{ '--card-color': hexOf(card.colorId) }}
-              aria-label={isUp ? card.colorId : 'hidden card'}
+              className={`card ${isUp ? 'up' : ''} ${card.face === STAR ? 'star' : ''}`}
+              aria-label={isUp ? card.face : 'hidden card'}
               onClick={() => flip(index)}
-            />
+            >
+              {isUp && <span className="glyph">{card.face}</span>}
+            </button>
           )
         })}
       </div>

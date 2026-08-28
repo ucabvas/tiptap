@@ -67,13 +67,19 @@ export function PlayerBar({ faces, turn, over, winners, piles, onPick }) {
         >
           <span className="face">{faces[i]}</span>
           <span className="pile">
-            {piles[i].map((token) => (
-              <i
-                key={token.key}
-                className={token.pale ? 'star-dot' : ''}
-                style={{ background: token.color }}
-              />
-            ))}
+            {piles[i].map((token) =>
+              token.face ? (
+                <span key={token.key} className="pile-face">
+                  {token.face}
+                </span>
+              ) : (
+                <i
+                  key={token.key}
+                  className={token.pale ? 'star-dot' : ''}
+                  style={{ background: token.color }}
+                />
+              )
+            )}
           </span>
         </button>
       ))}

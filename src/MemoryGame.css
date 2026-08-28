@@ -5,6 +5,8 @@
 }
 
 .card {
+  display: grid;
+  place-content: center;
   width: clamp(48px, 11vw, 80px);
   aspect-ratio: 1;
   border: none;
@@ -16,24 +18,28 @@
   transition: background 220ms ease, transform 220ms ease;
 }
 
-.card::after {
+.card:not(.up)::after {
   content: '';
   display: block;
-  width: 34%;
+  width: clamp(0.9rem, 2.6vw, 1.5rem);
   aspect-ratio: 1;
-  margin: 0 auto;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.08);
-  transition: opacity 160ms ease;
 }
 
 .card.up {
-  background: var(--card-color);
-  transform: rotateY(180deg);
+  background: #fffdf6;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.08), inset 0 0 0 4px rgba(0, 0, 0, 0.05);
 }
 
-.card.up::after {
-  opacity: 0;
+.glyph {
+  font-size: clamp(1.7rem, 5vw, 2.8rem);
+  line-height: 1;
+  animation: turn 260ms ease-out;
+}
+
+@keyframes turn {
+  from { transform: scale(0.3) rotate(-25deg); opacity: 0; }
 }
 
 .card:active {
@@ -41,12 +47,5 @@
 }
 
 .card.star.up {
-  background: radial-gradient(circle at 50% 40%, #fffdf2, var(--card-color));
-}
-
-.card.star.up::before {
-  content: '⭐';
-  display: block;
-  font-size: clamp(1.4rem, 4vw, 2.4rem);
-  line-height: 1;
+  background: radial-gradient(circle at 50% 40%, #fffdf2, #ffe9a8);
 }
