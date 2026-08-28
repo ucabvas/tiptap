@@ -1,0 +1,89 @@
+.things {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(0.2rem, 1vw, 0.6rem);
+  max-width: min(90vw, 40rem);
+  min-height: clamp(4rem, 14vh, 7rem);
+}
+
+.things span {
+  font-size: clamp(2rem, 7vw, 3.4rem);
+  line-height: 1;
+}
+
+.things.solved span {
+  animation: hop 500ms ease-in-out;
+  animation-delay: calc(var(--i) * 90ms);
+}
+
+@keyframes hop {
+  50% { transform: translateY(-16px) scale(1.15); }
+}
+
+.choices {
+  display: flex;
+  gap: clamp(0.75rem, 3vw, 2rem);
+}
+
+.choice {
+  display: grid;
+  place-items: center;
+  gap: 0.5rem;
+  width: clamp(90px, 22vw, 150px);
+  padding: clamp(0.6rem, 2vh, 1.2rem) 0.5rem;
+  border: none;
+  border-radius: 1.5rem;
+  cursor: pointer;
+  background: #f2f2f7;
+  box-shadow: 0 7px 0 rgba(0, 0, 0, 0.1);
+  transition: background 180ms ease, transform 140ms ease, opacity 180ms ease;
+}
+
+.numeral {
+  font-size: clamp(2.6rem, 9vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1;
+  color: #34343e;
+}
+
+.beads {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem;
+  max-width: 5.5rem;
+}
+
+.beads i {
+  display: block;
+  width: clamp(0.5rem, 1.6vw, 0.75rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #b9b9c4;
+}
+
+.choice:active {
+  transform: translateY(7px) scale(0.96);
+  box-shadow: none;
+}
+
+.choice.nope {
+  opacity: 0.35;
+  animation: shake 320ms ease-in-out;
+}
+
+.choice.yes {
+  background: color-mix(in srgb, var(--player-color) 45%, #ffffff);
+  animation: cheer 600ms ease-in-out 3 alternate;
+}
+
+.choice.yes .beads i {
+  background: #ffffff;
+}
+
+@keyframes shake {
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}

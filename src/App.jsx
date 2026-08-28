@@ -3,6 +3,7 @@ import MixGame from './MixGame'
 import MemoryGame from './MemoryGame'
 import ThreeInARow from './ThreeInARow'
 import QuickTap from './QuickTap'
+import CountGame from './CountGame'
 import './App.css'
 
 const GAMES = {
@@ -10,6 +11,7 @@ const GAMES = {
   memory: MemoryGame,
   row: ThreeInARow,
   tap: QuickTap,
+  count: CountGame,
 }
 
 export default function App() {
@@ -54,6 +56,17 @@ export default function App() {
             <i style={{ background: '#ff8c1a' }} />
             <i className="spark">⭐</i>
             <i style={{ background: '#7ec8f2' }} />
+          </span>
+        </button>
+
+        <button className="tile" onClick={() => setGame('count')} aria-label="Counting game">
+          <span className="tile-art count-art">
+            <span className="numeral">3</span>
+            <span className="beads">
+              <i />
+              <i />
+              <i />
+            </span>
           </span>
         </button>
       </div>

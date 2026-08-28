@@ -17,7 +17,7 @@
 
 .home {
   display: grid;
-  grid-template-columns: repeat(2, auto);
+  grid-template-columns: repeat(3, auto);
   gap: clamp(1rem, 4vw, 2.5rem);
 }
 
@@ -97,6 +97,31 @@
   width: auto;
   font-size: clamp(1.4rem, 4vw, 2.2rem);
   font-style: normal;
+}
+
+.count-art {
+  gap: 0.5rem;
+  place-content: center;
+}
+
+.count-art .numeral {
+  font-size: clamp(2.6rem, 8vw, 4rem);
+  font-weight: 800;
+  color: #34343e;
+  line-height: 1;
+}
+
+.count-art .beads {
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.count-art .beads i {
+  width: clamp(0.6rem, 2vw, 0.9rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #b9b9c4;
 }
 
 .memory-art i {
