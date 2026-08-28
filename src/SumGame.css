@@ -1,0 +1,42 @@
+.sum {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.4rem, 2vw, 1.2rem);
+  max-width: min(92vw, 42rem);
+  min-height: clamp(4rem, 13vh, 6.5rem);
+}
+
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(0.15rem, 0.8vw, 0.5rem);
+}
+
+.group span {
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  line-height: 1;
+  transition: opacity 250ms ease;
+}
+
+.group .gone {
+  opacity: 0.22;
+  filter: grayscale(1);
+}
+
+.sum .sign {
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-weight: 800;
+  color: #b9b9c4;
+}
+
+.sum.solved .group span:not(.gone) {
+  animation: hop 500ms ease-in-out;
+  animation-delay: calc(var(--i) * 80ms);
+}
+
+@keyframes hop {
+  50% { transform: translateY(-16px) scale(1.15); }
+}

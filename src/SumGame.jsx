@@ -2,33 +2,50 @@ import { useEffect, useState } from 'react'
 import { LevelButton, NumberCards, TypeBox, typedDigit } from './Answer'
 import { PlayerBar, PlayerPicker, SEATS, usePlayers } from './Players'
 import './Answer.css'
-import './CountGame.css'
+import './SumGame.css'
 
 const THINGS = ['🍎', '🐟', '⭐', '🐞', '🍌', '🎈', '🐣', '🍓', '🦋', '🍪']
 
 const TARGET = 5
-const MOST = 9
+const MOST = 10
 
 const pick = (list) => list[Math.floor(Math.random() * list.length)]
 
+// Half the rounds add two groups, half take some of one group away.
 function newRound() {
-  const count = 1 + Math.floor(Math.random() * MOST)
-  const options = [count]
-  while (options.length < 3) {
-    const guess = count + (Math.random() < 0.5 ? -1 : 1) * (1 + Math.floor(Math.random() * 3))
-    if (guess >= 1 && guess <= MOST && !options.includes(guess)) options.push(guess)
+  const thing = pick(THINGS)
+  if (Math.random() < 0.5) {
+    const left = 1 + Math.floor(Math.random() * 5)
+    const right = 1 + Math.floor(Math.random() * Math.min(5, MOST - left))
+    return { kind: 'add', thing, left, right, answer: left + right }
   }
-  for (let i = options.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[options[i], options[j]] = [options[j], options[i]]
-  }
-  return { count, thing: pick(THINGS), options }
+  const from = 3 + Math.floor(Math.random() * (MOST - 3))
+  const gone = 1 + Math.floor(Math.random() * (from - 1))
+  return { kind: 'take', thing, from, gone, answer: from - gone }
 }
 
-export default function CountGame() {
+function options(answer) {
+  const list = [answer]
+  while (list.length < 3) {
+    const guess = answer + (Math.random() < 0.5 ? -1 : 1) * (1 + Math.floor(Math.random() * 2))
+    if (guess >= 1 && guess <= MOST && !list.includes(guess)) list.push(guess)
+  }
+  for (let i = list.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[list[i], list[j]] = [list[j], list[i]]
+  }
+  return list
+}
+
+const deal = () => {
+  const round = newRound()
+  return { ...round, options: options(round.answer) }
+}
+
+export default function SumGame() {
   const { faces, picking, setPicking, choose } = usePlayers()
   const [level, setLevel] = useState(1)
-  const [round, setRound] = useState(newRound)
+  const [round, setRound] = useState(deal)
   const [wrong, setWrong] = useState([])
   const [missed, setMissed] = useState(false)
   const [solved, setSolved] = useState(false)
@@ -39,19 +56,17 @@ export default function CountGame() {
 
   const guess = (option) => {
     if (solved || matchOver || wrong.includes(option)) return
-    if (option !== round.count) {
+    if (option !== round.answer) {
       setWrong((prev) => [...prev, option])
       setMissed(true)
       return
     }
-    // Counting it right first time wins the point; either way the turn passes.
     if (!missed) {
       setScores((prev) => prev.map((n, i) => (i === turn ? n + 1 : n)))
     }
     setSolved(true)
   }
 
-  // Level two: no cards to choose from, just type the number.
   useEffect(() => {
     if (level !== 2 || solved || matchOver) return
     const onKey = (event) => {
@@ -62,7 +77,7 @@ export default function CountGame() {
     return () => window.removeEventListener('keydown', onKey)
   })
 
-  // A wrong number fades away so the next try starts clean.
+  // A wrong number lingers for a moment, then clears for the next try.
   useEffect(() => {
     if (level !== 2 || !wrong.length) return
     const timer = setTimeout(() => setWrong([]), 700)
@@ -76,7 +91,7 @@ export default function CountGame() {
     } else if (solved) {
       setTurn(1 - turn)
     }
-    setRound(newRound())
+    setRound(deal())
     setWrong([])
     setMissed(false)
     setSolved(false)
@@ -84,15 +99,15 @@ export default function CountGame() {
 
   const swapLevel = () => {
     setLevel(level === 1 ? 2 : 1)
+    setRound(deal())
     setWrong([])
     setMissed(false)
     setSolved(false)
-    setRound(newRound())
   }
 
   if (picking !== null) {
     return (
-      <div className="game count-game">
+      <div className="game sum-game">
         <PlayerPicker faces={faces} picking={picking} onChoose={choose} />
       </div>
     )
@@ -101,7 +116,7 @@ export default function CountGame() {
   const typed = wrong[wrong.length - 1]
 
   return (
-    <div className="game count-game">
+    <div className="game sum-game">
       <PlayerBar
         faces={faces}
         turn={turn}
@@ -113,25 +128,29 @@ export default function CountGame() {
         onPick={setPicking}
       />
 
-      <div className={`things ${solved ? 'solved' : ''}`}>
-        {Array.from({ length: round.count }, (_, i) => (
-          <span key={i} style={{ '--i': i }}>
-            {round.thing}
-          </span>
-        ))}
+      <div className={`sum ${solved ? 'solved' : ''}`}>
+        {round.kind === 'add' ? (
+          <>
+            <Group thing={round.thing} count={round.left} />
+            <span className="sign">+</span>
+            <Group thing={round.thing} count={round.right} from={round.left} />
+          </>
+        ) : (
+          <Group thing={round.thing} count={round.from} gone={round.gone} />
+        )}
       </div>
 
       {level === 1 ? (
         <NumberCards
           options={round.options}
-          answer={round.count}
+          answer={round.answer}
           wrong={wrong}
           solved={solved}
           color={SEATS[turn].color}
           onGuess={guess}
         />
       ) : (
-        <TypeBox answer={round.count} typed={typed} solved={solved} color={SEATS[turn].color} />
+        <TypeBox answer={round.answer} typed={typed} solved={solved} color={SEATS[turn].color} />
       )}
 
       <div className="tray">
@@ -141,5 +160,22 @@ export default function CountGame() {
         <LevelButton level={level} onSwap={swapLevel} />
       </div>
     </div>
+  )
+}
+
+// The last `gone` things have been eaten, so they fade out of the count.
+function Group({ thing, count, gone = 0, from = 0 }) {
+  return (
+    <span className="group">
+      {Array.from({ length: count }, (_, i) => (
+        <span
+          key={i}
+          className={i >= count - gone ? 'gone' : ''}
+          style={{ '--i': from + i }}
+        >
+          {thing}
+        </span>
+      ))}
+    </span>
   )
 }

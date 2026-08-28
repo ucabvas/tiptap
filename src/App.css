@@ -17,7 +17,7 @@
 
 .home {
   display: grid;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: repeat(4, auto);
   gap: clamp(1rem, 4vw, 2.5rem);
 }
 
@@ -140,6 +140,31 @@
   height: clamp(36px, 9vw, 56px);
   border-radius: 0.4rem 0.4rem 1.2rem 1.2rem;
   opacity: 0.75;
+}
+
+.sum-art {
+  gap: 0.5rem;
+  place-content: center;
+}
+
+.sum-art .numeral {
+  font-size: clamp(2.6rem, 8vw, 4rem);
+  font-weight: 800;
+  color: #34343e;
+  line-height: 1;
+}
+
+.sum-art .beads {
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.sum-art .beads i {
+  width: clamp(0.5rem, 1.7vw, 0.8rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #b9b9c4;
 }
 
 .memory-art i {

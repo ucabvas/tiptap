@@ -1,0 +1,124 @@
+.choices {
+  display: flex;
+  gap: clamp(0.75rem, 3vw, 2rem);
+}
+
+.choice {
+  display: grid;
+  place-items: center;
+  gap: 0.5rem;
+  width: clamp(90px, 22vw, 150px);
+  padding: clamp(0.6rem, 2vh, 1.2rem) 0.5rem;
+  border: none;
+  border-radius: 1.5rem;
+  cursor: pointer;
+  background: #f2f2f7;
+  box-shadow: 0 7px 0 rgba(0, 0, 0, 0.1);
+  transition: background 180ms ease, transform 140ms ease, opacity 180ms ease;
+}
+
+.numeral {
+  font-size: clamp(2.6rem, 9vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1;
+  color: #34343e;
+}
+
+.beads {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem;
+  max-width: 5.5rem;
+}
+
+.beads i {
+  display: block;
+  width: clamp(0.5rem, 1.6vw, 0.75rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #b9b9c4;
+}
+
+.choice:active {
+  transform: translateY(7px) scale(0.96);
+  box-shadow: none;
+}
+
+.choice.nope {
+  opacity: 0.35;
+  animation: shake 320ms ease-in-out;
+}
+
+.choice.yes {
+  background: color-mix(in srgb, var(--player-color) 45%, #ffffff);
+  animation: cheer 600ms ease-in-out 3 alternate;
+}
+
+.choice.yes .beads i {
+  background: #ffffff;
+}
+
+@keyframes shake {
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.typed {
+  display: grid;
+  place-items: center;
+  width: clamp(120px, 30vw, 190px);
+  height: clamp(120px, 26vh, 190px);
+  border-radius: 1.5rem;
+  background: #f2f2f7;
+  box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.05);
+  transition: background 180ms ease;
+}
+
+.typed .numeral {
+  font-size: clamp(4rem, 14vw, 7rem);
+}
+
+.typed.yes {
+  background: color-mix(in srgb, var(--player-color) 45%, #ffffff);
+  animation: cheer 600ms ease-in-out 3 alternate;
+}
+
+.typed.nope {
+  animation: shake 320ms ease-in-out;
+}
+
+.typed.nope .numeral {
+  color: #c9c9d2;
+}
+
+.caret {
+  display: block;
+  width: clamp(2.4rem, 7vw, 3.6rem);
+  height: 0.5rem;
+  border-radius: 0.25rem;
+  background: #d2d2da;
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0.2; }
+}
+
+.tray {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.level {
+  border: none;
+  background: #f2f2f7;
+  color: #9a9aa6;
+  font-size: 1.1rem;
+  font-weight: 800;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  cursor: pointer;
+}

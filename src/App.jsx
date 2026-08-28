@@ -5,6 +5,7 @@ import ThreeInARow from './ThreeInARow'
 import QuickTap from './QuickTap'
 import CountGame from './CountGame'
 import DragSort from './DragSort'
+import SumGame from './SumGame'
 import './App.css'
 
 const GAMES = {
@@ -14,6 +15,7 @@ const GAMES = {
   tap: QuickTap,
   count: CountGame,
   sort: DragSort,
+  sum: SumGame,
 }
 
 export default function App() {
@@ -76,6 +78,19 @@ export default function App() {
           <span className="tile-art sort-art">
             <i className="drop" style={{ background: '#2fb457' }} />
             <i className="pot" style={{ background: '#2fb457' }} />
+          </span>
+        </button>
+
+        <button className="tile" onClick={() => setGame('sum')} aria-label="Adding game">
+          <span className="tile-art sum-art">
+            <span className="numeral">+</span>
+            <span className="beads">
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+            </span>
           </span>
         </button>
       </div>
