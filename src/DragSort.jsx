@@ -14,14 +14,14 @@ const newBlob = () => ({
   colorId: BUCKETS[Math.floor(Math.random() * BUCKETS.length)],
 })
 
-export default function DragSort() {
-  const { faces, picking, setPicking, choose } = usePlayers()
+export default function DragSort({ players }) {
+  const { faces, picking, setPicking, choose } = usePlayers(players)
   const [blob, setBlob] = useState(newBlob)
   const [drag, setDrag] = useState(null)
   const [landed, setLanded] = useState(null)
   const [bumped, setBumped] = useState(null)
   const [missed, setMissed] = useState(false)
-  const [scores, setScores] = useState([0, 0])
+  const [scores, setScores] = useState(() => Array(players).fill(0))
   const [turn, setTurn] = useState(0)
   const bucketRefs = useRef([])
 
@@ -34,10 +34,10 @@ export default function DragSort() {
       setLanded(null)
       setMissed(false)
       setBlob(newBlob())
-      setTurn((prev) => 1 - prev)
+      setTurn((prev) => (prev + 1) % players)
     }, 900)
     return () => clearTimeout(timer)
-  }, [landed])
+  }, [landed, players])
 
   useEffect(() => {
     if (bumped === null) return
@@ -83,7 +83,7 @@ export default function DragSort() {
   }
 
   const restart = () => {
-    setScores([0, 0])
+    setScores(Array(players).fill(0))
     setTurn(0)
     setMissed(false)
     setLanded(null)
@@ -104,7 +104,7 @@ export default function DragSort() {
         faces={faces}
         turn={turn}
         over={matchOver}
-        winners={SEATS.map((_, i) => matchOver && scores[i] === TARGET)}
+        winners={scores.map((score) => matchOver && score === TARGET)}
         piles={scores.map((n, i) =>
           Array.from({ length: n }, (_, j) => ({ key: j, color: SEATS[i].color }))
         )}

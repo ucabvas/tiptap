@@ -5,24 +5,28 @@ export const FACES = ['🦊', '🐼', '🐸', '🦁', '🐵', '🐷', '🐙', '�
 
 export const SEATS = [{ color: '#ff8c1a' }, { color: '#7ec8f2' }]
 
-// Both games start the same way: two players, each picking an animal.
-export function usePlayers() {
-  const [faces, setFaces] = useState([null, null])
+// Every game starts the same way: each player picks an animal.
+// `count` is 1 for solo play, 2 for two players sharing the screen.
+export function usePlayers(count = 2) {
+  const [faces, setFaces] = useState(() => Array(count).fill(null))
   const [picking, setPicking] = useState(0)
 
   const choose = (face) => {
-    setFaces((prev) => prev.map((f, i) => (i === picking ? face : f)))
-    setPicking(picking === 0 && !faces[1] ? 1 : null)
+    const next = faces.map((f, i) => (i === picking ? face : f))
+    setFaces(next)
+    const open = next.findIndex((f) => f === null)
+    setPicking(open === -1 ? null : open)
   }
 
   return { faces, picking, setPicking, choose }
 }
 
 export function PlayerPicker({ faces, picking, onChoose }) {
+  const seats = SEATS.slice(0, faces.length)
   return (
     <>
       <div className="seats">
-        {SEATS.map((seat, i) => (
+        {seats.map((seat, i) => (
           <span
             key={i}
             className={`seat ${picking === i ? 'choosing' : ''}`}
@@ -55,7 +59,7 @@ export function PlayerPicker({ faces, picking, onChoose }) {
 export function PlayerBar({ faces, turn, over, winners, piles, onPick }) {
   return (
     <div className="players">
-      {SEATS.map((seat, i) => (
+      {SEATS.slice(0, faces.length).map((seat, i) => (
         <button
           key={i}
           className={`player ${!over && turn === i ? 'active' : ''} ${

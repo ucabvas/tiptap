@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { PlayerBar, PlayerPicker, SEATS, usePlayers } from './Players'
+import { PlayerBar, PlayerPicker, usePlayers } from './Players'
 import './MemoryGame.css'
 
 // Twelve pairs plus one lucky star fill the 5x5 board.
@@ -22,11 +22,11 @@ function shuffledCards() {
   return cards
 }
 
-export default function MemoryGame() {
-  const { faces, picking, setPicking, choose } = usePlayers()
+export default function MemoryGame({ players }) {
+  const { faces, picking, setPicking, choose } = usePlayers(players)
   const [cards, setCards] = useState(shuffledCards)
   const [flipped, setFlipped] = useState([])
-  const [won, setWon] = useState([[], []])
+  const [won, setWon] = useState(() => Array.from({ length: players }, () => []))
   const [turn, setTurn] = useState(0)
 
   const collected = won.flat()
@@ -43,13 +43,13 @@ export default function MemoryGame() {
     }
     const timer = setTimeout(() => {
       setFlipped([])
-      setTurn((prev) => 1 - prev)
+      setTurn((prev) => (prev + 1) % players)
     }, 1100)
     return () => clearTimeout(timer)
-  }, [flipped, cards, turn])
+  }, [flipped, cards, turn, players])
 
   const over = collected.length === DECK.length + 1
-  const best = Math.max(won[0].length, won[1].length)
+  const best = Math.max(...won.map((pile) => pile.length))
 
   const flip = (index) => {
     const card = cards[index]
@@ -66,7 +66,7 @@ export default function MemoryGame() {
   const restart = () => {
     setCards(shuffledCards())
     setFlipped([])
-    setWon([[], []])
+    setWon(Array.from({ length: players }, () => []))
     setTurn(0)
   }
 
@@ -84,7 +84,7 @@ export default function MemoryGame() {
         faces={faces}
         turn={turn}
         over={over}
-        winners={SEATS.map((_, i) => over && won[i].length === best)}
+        winners={won.map((pile) => over && pile.length === best)}
         piles={won.map((pile) => pile.map((face) => ({ key: face, face })))}
         onPick={setPicking}
       />

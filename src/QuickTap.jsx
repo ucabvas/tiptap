@@ -10,10 +10,10 @@ const KEYS = [
   ['ShiftRight', 'KeyL', 'Slash'],
 ]
 
-export default function QuickTap() {
-  const { faces, picking, setPicking, choose } = usePlayers()
+export default function QuickTap({ players }) {
+  const { faces, picking, setPicking, choose } = usePlayers(players)
   const [phase, setPhase] = useState('ready')
-  const [scores, setScores] = useState([0, 0])
+  const [scores, setScores] = useState(() => Array(players).fill(0))
   const [last, setLast] = useState(null)
 
   // The star lights up after an unpredictable little wait.
@@ -33,14 +33,21 @@ export default function QuickTap() {
 
   const slap = (player) => {
     if (phase === 'go') score(player, 'quick')
-    else if (phase === 'set') score(1 - player, 'early')
+    else if (phase === 'set') {
+      // Alone, there's no rival to hand the point to: an early tap just misses.
+      if (players > 1) score((player + 1) % players, 'early')
+      else {
+        setLast({ player, reason: 'early' })
+        setPhase('done')
+      }
+    }
   }
 
   // Left shift for the player on the left, right shift for the right.
   useEffect(() => {
     const onKey = (event) => {
       if (event.repeat) return
-      const seat = KEYS.findIndex((keys) => keys.includes(event.code))
+      const seat = KEYS.slice(0, players).findIndex((keys) => keys.includes(event.code))
       if (seat !== -1) {
         event.preventDefault()
         slap(seat)
@@ -57,7 +64,7 @@ export default function QuickTap() {
 
   const startRound = () => {
     if (matchOver) {
-      setScores([0, 0])
+      setScores(Array(players).fill(0))
       setLast(null)
       setPhase('ready')
       return
@@ -80,7 +87,7 @@ export default function QuickTap() {
         faces={faces}
         turn={-1}
         over={matchOver}
-        winners={SEATS.map((_, i) => matchOver && scores[i] === TARGET)}
+        winners={scores.map((score) => matchOver && score === TARGET)}
         piles={scores.map((n, i) =>
           Array.from({ length: n }, (_, j) => ({ key: j, color: SEATS[i].color }))
         )}
@@ -100,7 +107,9 @@ export default function QuickTap() {
         >
           {phase === 'go' ? '⭐' : phase === 'set' ? '💤' : matchOver ? '↺' : '▶'}
         </button>
-        <Pad seat={1} face={faces[1]} phase={phase} scored={last?.player === 1} onSlap={slap} />
+        {players > 1 && (
+          <Pad seat={1} face={faces[1]} phase={phase} scored={last?.player === 1} onSlap={slap} />
+        )}
       </div>
     </div>
   )

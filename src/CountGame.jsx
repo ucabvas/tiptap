@@ -25,14 +25,14 @@ function newRound() {
   return { count, thing: pick(THINGS), options }
 }
 
-export default function CountGame() {
-  const { faces, picking, setPicking, choose } = usePlayers()
+export default function CountGame({ players }) {
+  const { faces, picking, setPicking, choose } = usePlayers(players)
   const [level, setLevel] = useState(1)
   const [round, setRound] = useState(newRound)
   const [wrong, setWrong] = useState([])
   const [missed, setMissed] = useState(false)
   const [solved, setSolved] = useState(false)
-  const [scores, setScores] = useState([0, 0])
+  const [scores, setScores] = useState(() => Array(players).fill(0))
   const [turn, setTurn] = useState(0)
 
   const matchOver = scores.some((score) => score === TARGET)
@@ -71,10 +71,10 @@ export default function CountGame() {
 
   const next = () => {
     if (matchOver) {
-      setScores([0, 0])
+      setScores(Array(players).fill(0))
       setTurn(0)
     } else if (solved) {
-      setTurn(1 - turn)
+      setTurn((turn + 1) % players)
     }
     setRound(newRound())
     setWrong([])
@@ -106,7 +106,7 @@ export default function CountGame() {
         faces={faces}
         turn={turn}
         over={matchOver}
-        winners={SEATS.map((_, i) => matchOver && scores[i] === TARGET)}
+        winners={scores.map((score) => matchOver && score === TARGET)}
         piles={scores.map((n, i) =>
           Array.from({ length: n }, (_, j) => ({ key: j, color: SEATS[i].color }))
         )}
