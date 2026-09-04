@@ -39,15 +39,24 @@ export function TypeBox({ answer, typed, solved, color }) {
   )
 }
 
-export function LevelButton({ level, onSwap }) {
+export function LevelButton({ level, onSelect }) {
   return (
-    <button
-      className="level"
-      onClick={onSwap}
-      aria-label={level === 1 ? 'switch to typing' : 'switch to number cards'}
-    >
-      {level}
-    </button>
+    <div className="level-toggle">
+      <button
+        className={level === 1 ? 'active' : ''}
+        onClick={() => onSelect(1)}
+        aria-label="pick the number"
+      >
+        🔢
+      </button>
+      <button
+        className={level === 2 ? 'active' : ''}
+        onClick={() => onSelect(2)}
+        aria-label="type the number"
+      >
+        ⌨️
+      </button>
+    </div>
   )
 }
 

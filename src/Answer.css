@@ -111,14 +111,29 @@
   gap: 1rem;
 }
 
-.level {
-  border: none;
+.level-toggle {
+  display: flex;
+  gap: 0.3rem;
   background: #f2f2f7;
+  padding: 0.3rem;
+  border-radius: 999px;
+}
+
+.level-toggle button {
+  display: grid;
+  place-items: center;
+  border: none;
+  background: transparent;
   color: #9a9aa6;
-  font-size: 1.1rem;
-  font-weight: 800;
-  width: 2.2rem;
-  height: 2.2rem;
+  font-size: 1.3rem;
+  width: 2.4rem;
+  height: 2.4rem;
   border-radius: 50%;
   cursor: pointer;
+  transition: background 150ms ease, box-shadow 150ms ease;
+}
+
+.level-toggle button.active {
+  background: #ffffff;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
 }

@@ -69,21 +69,31 @@ export default function CountGame({ players }) {
     return () => clearTimeout(timer)
   }, [level, wrong])
 
-  const next = () => {
-    if (matchOver) {
-      setScores(Array(players).fill(0))
-      setTurn(0)
-    } else if (solved) {
-      setTurn((turn + 1) % players)
-    }
+  // Getting it right moves on by itself after a moment to celebrate;
+  // reaching the target instead waits for a deliberate restart.
+  useEffect(() => {
+    if (!solved || matchOver) return
+    const timer = setTimeout(() => {
+      setTurn((prev) => (prev + 1) % players)
+      setRound(newRound())
+      setWrong([])
+      setMissed(false)
+      setSolved(false)
+    }, 1100)
+    return () => clearTimeout(timer)
+  }, [solved, matchOver, players])
+
+  const restart = () => {
+    setScores(Array(players).fill(0))
+    setTurn(0)
     setRound(newRound())
     setWrong([])
     setMissed(false)
     setSolved(false)
   }
 
-  const swapLevel = () => {
-    setLevel(level === 1 ? 2 : 1)
+  const changeLevel = (next) => {
+    setLevel(next)
     setWrong([])
     setMissed(false)
     setSolved(false)
@@ -135,10 +145,10 @@ export default function CountGame({ players }) {
       )}
 
       <div className="tray">
-        <button className="reset" onClick={next} aria-label="Next one">
-          {matchOver ? '↺' : '→'}
+        <button className="reset" onClick={restart} aria-label="Start over">
+          ↺
         </button>
-        <LevelButton level={level} onSwap={swapLevel} />
+        <LevelButton level={level} onSelect={changeLevel} />
       </div>
     </div>
   )
