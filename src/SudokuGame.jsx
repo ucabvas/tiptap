@@ -74,8 +74,30 @@ export default function SudokuGame() {
 
   const select = (row, col) => {
     if (given[row][col] || board[row][col] || won) return
+    if (selected?.row === row && selected?.col === col) {
+      setSelected(null)
+      return
+    }
     setSelected({ row, col })
     setWrong(null)
+  }
+
+  // Digits already sitting in this cell's row, column, or box -- not
+  // real choices, so the overlay greys them out.
+  const usedNear = (row, col) => {
+    const used = new Set()
+    for (let i = 0; i < SIZE; i++) {
+      if (board[row][i]) used.add(board[row][i])
+      if (board[i][col]) used.add(board[i][col])
+    }
+    const boxRow = row - (row % BOX)
+    const boxCol = col - (col % BOX)
+    for (let r = boxRow; r < boxRow + BOX; r++) {
+      for (let c = boxCol; c < boxCol + BOX; c++) {
+        if (board[r][c]) used.add(board[r][c])
+      }
+    }
+    return used
   }
 
   const answer = (value) => {
@@ -105,6 +127,8 @@ export default function SudokuGame() {
     if (digit) answer(digit)
   }
 
+  const used = selected ? usedNear(selected.row, selected.col) : null
+
   return (
     <div className="game sudoku-game" onKeyDown={onKeyDown}>
       <div className={`board ${won ? 'won' : ''}`}>
@@ -117,26 +141,43 @@ export default function SudokuGame() {
                 key={`${r}-${c}`}
                 className={`cell ${isGiven ? 'given' : ''} ${isSelected ? 'selected' : ''} ${
                   value && !isGiven ? 'filled' : ''
-                } ${isSelected && wrong ? 'nope' : ''} ${
+                } ${
                   c % BOX === BOX - 1 && c !== SIZE - 1 ? 'box-right' : ''
                 } ${r % BOX === BOX - 1 && r !== SIZE - 1 ? 'box-bottom' : ''}`}
                 aria-label={value ? `${value}` : 'empty square'}
                 disabled={isGiven || value !== 0}
                 onClick={() => select(r, c)}
               >
-                {value || (isSelected && wrong) || ''}
+                {value || ''}
               </button>
             )
           })
         )}
-      </div>
 
-      <div className={`pad ${!selected ? 'idle' : ''}`}>
-        {DIGITS.map((digit) => (
-          <button key={digit} disabled={!selected} onClick={() => answer(digit)}>
-            {digit}
-          </button>
-        ))}
+        {selected && (
+          <>
+            <button
+              className="overlay-backdrop"
+              aria-label="close"
+              onClick={() => setSelected(null)}
+            />
+            <div
+              className="digit-overlay"
+              style={{ '--r': selected.row, '--c': selected.col }}
+            >
+              {DIGITS.map((digit) => (
+                <button
+                  key={digit}
+                  disabled={used.has(digit)}
+                  className={wrong === digit ? 'nope' : ''}
+                  onClick={() => answer(digit)}
+                >
+                  {digit}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       <div className="tray">
