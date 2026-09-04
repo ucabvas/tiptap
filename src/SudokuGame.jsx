@@ -59,44 +59,57 @@ function makePuzzle(emptyCount) {
     given[Math.floor(cell / SIZE)][cell % SIZE] = 0
   }
 
-  return { solution, given, board: given.map((row) => [...row]) }
+  return { given, board: given.map((row) => [...row]) }
+}
+
+// True if this cell's value also sits somewhere else in its row,
+// column, or box -- the actual sudoku rule, not "matches the answer".
+function conflictsAt(board, row, col) {
+  const value = board[row][col]
+  if (!value) return false
+  for (let i = 0; i < SIZE; i++) {
+    if (i !== col && board[row][i] === value) return true
+    if (i !== row && board[i][col] === value) return true
+  }
+  const boxRow = row - (row % BOX)
+  const boxCol = col - (col % BOX)
+  for (let r = boxRow; r < boxRow + BOX; r++) {
+    for (let c = boxCol; c < boxCol + BOX; c++) {
+      if ((r !== row || c !== col) && board[r][c] === value) return true
+    }
+  }
+  return false
 }
 
 export default function SudokuGame() {
   const [difficulty, setDifficulty] = useState(MIN_EMPTY)
   const [puzzle, setPuzzle] = useState(() => makePuzzle(MIN_EMPTY))
   const [selected, setSelected] = useState(null)
-  const [wrong, setWrong] = useState(null)
 
-  const { solution, given, board } = puzzle
+  const { given, board } = puzzle
 
-  const won = board.every((row) => row.every((value) => value !== 0))
+  const complete = board.every((row) => row.every((value) => value !== 0))
+  const hasConflict = board.some((row, r) => row.some((_, c) => conflictsAt(board, r, c)))
+  const won = complete && !hasConflict
 
   const select = (row, col) => {
-    if (given[row][col] || board[row][col] || won) return
+    if (given[row][col] || won) return
     if (selected?.row === row && selected?.col === col) {
       setSelected(null)
       return
     }
     setSelected({ row, col })
-    setWrong(null)
   }
 
   const answer = (value) => {
     if (!selected || won) return
     const { row, col } = selected
-    if (solution[row][col] === value) {
-      setPuzzle((prev) => {
-        const next = prev.board.map((r) => [...r])
-        next[row][col] = value
-        return { ...prev, board: next }
-      })
-      setSelected(null)
-      setWrong(null)
-      return
-    }
-    setWrong(value)
-    setTimeout(() => setWrong(null), 500)
+    setPuzzle((prev) => {
+      const next = prev.board.map((r) => [...r])
+      next[row][col] = value
+      return { ...prev, board: next }
+    })
+    setSelected(null)
   }
 
   const restart = () => setPuzzle(makePuzzle(difficulty))
@@ -116,16 +129,17 @@ export default function SudokuGame() {
           row.map((value, c) => {
             const isGiven = given[r][c] !== 0
             const isSelected = selected?.row === r && selected?.col === c
+            const isConflict = conflictsAt(board, r, c)
             return (
               <button
                 key={`${r}-${c}`}
                 className={`cell ${isGiven ? 'given' : ''} ${isSelected ? 'selected' : ''} ${
                   value && !isGiven ? 'filled' : ''
-                } ${
+                } ${isConflict ? 'conflict' : ''} ${
                   c % BOX === BOX - 1 && c !== SIZE - 1 ? 'box-right' : ''
                 } ${r % BOX === BOX - 1 && r !== SIZE - 1 ? 'box-bottom' : ''}`}
                 aria-label={value ? `${value}` : 'empty square'}
-                disabled={isGiven || value !== 0}
+                disabled={isGiven}
                 onClick={() => select(r, c)}
               >
                 {value || ''}
@@ -146,11 +160,7 @@ export default function SudokuGame() {
               style={{ '--r': selected.row, '--c': selected.col }}
             >
               {DIGITS.map((digit) => (
-                <button
-                  key={digit}
-                  className={wrong === digit ? 'nope' : ''}
-                  onClick={() => answer(digit)}
-                >
+                <button key={digit} onClick={() => answer(digit)}>
                   {digit}
                 </button>
               ))}

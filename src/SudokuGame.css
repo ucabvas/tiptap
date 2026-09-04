@@ -32,12 +32,18 @@
 }
 
 .cell.filled {
-  color: #1d9e4b;
+  color: #1d75d6;
   animation: pop 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .cell.selected {
   background: color-mix(in srgb, #7ec8f2 35%, #ffffff);
+}
+
+/* A digit that also appears elsewhere in its row, column, or box --
+   colored on every cell that shares it, not just the newest one. */
+.cell.conflict {
+  color: #e63946;
 }
 
 /* Thicker lines between the 3x3 boxes. */
@@ -49,13 +55,8 @@
   border-bottom: 3px solid #b9b9c4;
 }
 
-.board.won .cell.filled {
+.board.won .cell {
   animation: cheer 600ms ease-in-out 3 alternate;
-}
-
-@keyframes shake {
-  25% { transform: translateX(-6px); }
-  75% { transform: translateX(6px); }
 }
 
 @keyframes cheer {
@@ -118,17 +119,6 @@
 .digit-overlay button:active {
   transform: translateY(4px);
   box-shadow: none;
-}
-
-.digit-overlay button:disabled {
-  opacity: 0.3;
-  cursor: default;
-  box-shadow: none;
-}
-
-.digit-overlay button.nope {
-  color: #e63946;
-  animation: shake 320ms ease-in-out;
 }
 
 .tray {
