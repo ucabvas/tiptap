@@ -13,19 +13,28 @@ const CORNERS = [0, 2, 6, 8]
 const winningLine = (board) =>
   LINES.find(([a, b, c]) => board[a] !== null && board[a] === board[b] && board[b] === board[c])
 
-// A friendly-not-perfect opponent: take a win, block a loss, else favor
-// the center and corners so a small kid still has a real shot at winning.
+// A friendly-not-perfect opponent. Always finishes a win, but only
+// sometimes blocks one or bothers with the center/corners -- a kid
+// needs real chances to win, not just the illusion of one.
 function robotMove(board) {
   const open = board.flatMap((cell, i) => (cell === null ? [i] : []))
+
   for (const i of open) {
     if (winningLine(board.map((c, j) => (j === i ? 1 : c)))) return i
   }
-  for (const i of open) {
-    if (winningLine(board.map((c, j) => (j === i ? 0 : c)))) return i
+
+  if (Math.random() < 0.5) {
+    for (const i of open) {
+      if (winningLine(board.map((c, j) => (j === i ? 0 : c)))) return i
+    }
   }
-  if (board[4] === null) return 4
-  const openCorners = CORNERS.filter((i) => board[i] === null)
-  if (openCorners.length) return openCorners[Math.floor(Math.random() * openCorners.length)]
+
+  if (Math.random() < 0.5) {
+    if (board[4] === null) return 4
+    const openCorners = CORNERS.filter((i) => board[i] === null)
+    if (openCorners.length) return openCorners[Math.floor(Math.random() * openCorners.length)]
+  }
+
   return open[Math.floor(Math.random() * open.length)]
 }
 
