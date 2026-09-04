@@ -51,12 +51,6 @@
   line-height: 1;
 }
 
-.tile-label {
-  font-size: clamp(1rem, 3vw, 1.3rem);
-  font-weight: 700;
-  color: #34343e;
-}
-
 .tile:active {
   transform: translateY(8px) scale(0.96);
   box-shadow: none;

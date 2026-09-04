@@ -117,7 +117,6 @@ export default function App() {
       <div className="app home mode-pick">
         <button className="tile mode-tile" onClick={() => setPlayers(1)} aria-label="Play alone">
           <span className="tile-art mode-art">🧒</span>
-          <span className="tile-label">Play alone</span>
         </button>
         <button
           className="tile mode-tile"
@@ -125,7 +124,6 @@ export default function App() {
           aria-label="Play with a friend"
         >
           <span className="tile-art mode-art">🧒🧒</span>
-          <span className="tile-label">Play together</span>
         </button>
       </div>
     )
