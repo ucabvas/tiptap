@@ -82,24 +82,6 @@ export default function SudokuGame() {
     setWrong(null)
   }
 
-  // Digits already sitting in this cell's row, column, or box -- not
-  // real choices, so the overlay greys them out.
-  const usedNear = (row, col) => {
-    const used = new Set()
-    for (let i = 0; i < SIZE; i++) {
-      if (board[row][i]) used.add(board[row][i])
-      if (board[i][col]) used.add(board[i][col])
-    }
-    const boxRow = row - (row % BOX)
-    const boxCol = col - (col % BOX)
-    for (let r = boxRow; r < boxRow + BOX; r++) {
-      for (let c = boxCol; c < boxCol + BOX; c++) {
-        if (board[r][c]) used.add(board[r][c])
-      }
-    }
-    return used
-  }
-
   const answer = (value) => {
     if (!selected || won) return
     const { row, col } = selected
@@ -126,8 +108,6 @@ export default function SudokuGame() {
     const digit = typedDigit(event)
     if (digit) answer(digit)
   }
-
-  const used = selected ? usedNear(selected.row, selected.col) : null
 
   return (
     <div className="game sudoku-game" onKeyDown={onKeyDown}>
@@ -168,7 +148,6 @@ export default function SudokuGame() {
               {DIGITS.map((digit) => (
                 <button
                   key={digit}
-                  disabled={used.has(digit)}
                   className={wrong === digit ? 'nope' : ''}
                   onClick={() => answer(digit)}
                 >
