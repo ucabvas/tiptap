@@ -1,0 +1,115 @@
+.sudoku-game .board {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 2px;
+  background: #d2d2da;
+  border-radius: 0.75rem;
+  padding: 3px;
+  width: min(90vw, 36rem);
+  aspect-ratio: 1;
+}
+
+.cell {
+  display: grid;
+  place-items: center;
+  border: none;
+  background: #ffffff;
+  color: #34343e;
+  font-size: clamp(0.9rem, 3.6vw, 1.6rem);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.cell:disabled {
+  cursor: default;
+}
+
+.cell.given {
+  color: #6b6b77;
+  background: #f2f2f7;
+}
+
+.cell.filled {
+  color: #1d9e4b;
+}
+
+.cell.selected {
+  background: color-mix(in srgb, #7ec8f2 35%, #ffffff);
+}
+
+.cell.nope {
+  color: #e63946;
+  animation: shake 320ms ease-in-out;
+}
+
+/* Thicker lines between the 3x3 boxes. */
+.cell.box-right {
+  border-right: 3px solid #b9b9c4;
+}
+
+.cell.box-bottom {
+  border-bottom: 3px solid #b9b9c4;
+}
+
+.board.won .cell.filled {
+  animation: cheer 600ms ease-in-out 3 alternate;
+}
+
+@keyframes shake {
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+@keyframes cheer {
+  from { transform: translateY(0) rotate(-3deg); }
+  to { transform: translateY(-4px) rotate(3deg); }
+}
+
+.pad {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: clamp(0.3rem, 1vw, 0.6rem);
+  width: min(90vw, 36rem);
+}
+
+.pad button {
+  border: none;
+  background: #f2f2f7;
+  color: #34343e;
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  font-weight: 800;
+  aspect-ratio: 1;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+  transition: opacity 180ms ease;
+}
+
+.pad button:active {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+
+.pad.idle button {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.tray {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.difficulty {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.3rem;
+}
+
+.difficulty input[type='range'] {
+  width: clamp(140px, 40vw, 260px);
+  accent-color: #7ec8f2;
+}

@@ -212,6 +212,24 @@
   border-radius: 24%;
 }
 
+.sudoku-art {
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.2rem, 1vw, 0.4rem);
+}
+
+.sudoku-art i {
+  display: grid;
+  place-content: center;
+  width: clamp(24px, 6vw, 40px);
+  aspect-ratio: 1;
+  border-radius: 20%;
+  background: #dedee6;
+  font-style: normal;
+  font-weight: 800;
+  font-size: clamp(0.9rem, 3vw, 1.3rem);
+  color: #6b6b77;
+}
+
 .back {
   position: fixed;
   top: 1rem;
