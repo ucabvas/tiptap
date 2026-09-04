@@ -1,3 +1,25 @@
+.timer-track {
+  width: min(80vw, 22rem);
+  height: 0.6rem;
+  border-radius: 999px;
+  background: #e9e9ef;
+  overflow: hidden;
+}
+
+.timer-bar {
+  height: 100%;
+  width: 100%;
+  transform-origin: left;
+  background: linear-gradient(90deg, #ffd60a, #ff8c1a);
+  animation-name: countdown;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes countdown {
+  to { transform: scaleX(0); }
+}
+
 .blob-shelf {
   display: grid;
   place-items: center;
@@ -22,6 +44,15 @@
   scale: 1.12;
   animation: none;
   box-shadow: 0 14px 22px rgba(0, 0, 0, 0.22), inset 0 0 0 6px rgba(255, 255, 255, 0.25);
+}
+
+.blob.expired {
+  animation: fade-out 400ms ease-in forwards;
+  pointer-events: none;
+}
+
+@keyframes fade-out {
+  to { transform: scale(0.3); opacity: 0; }
 }
 
 @keyframes pop-in {

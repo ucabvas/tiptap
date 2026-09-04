@@ -7,6 +7,11 @@ const BUCKETS = ['red', 'yellow', 'green', 'blue']
 
 const TARGET = 5
 
+// Blobs start slow and speed up as the match goes on.
+const START_TIME = 2200
+const MIN_TIME = 900
+const TIME_STEP = 140
+
 const hexOf = (id) => COLORS.find((c) => c.id === id).hex
 
 const newBlob = () => ({
@@ -19,6 +24,7 @@ export default function DragSort({ players }) {
   const [blob, setBlob] = useState(newBlob)
   const [drag, setDrag] = useState(null)
   const [landed, setLanded] = useState(null)
+  const [expired, setExpired] = useState(false)
   const [bumped, setBumped] = useState(null)
   const [missed, setMissed] = useState(false)
   const [scores, setScores] = useState(() => Array(players).fill(0))
@@ -26,18 +32,35 @@ export default function DragSort({ players }) {
   const bucketRefs = useRef([])
 
   const matchOver = scores.some((score) => score === TARGET)
+  const caught = scores.reduce((sum, n) => sum + n, 0)
+  const timeLimit = Math.max(MIN_TIME, START_TIME - caught * TIME_STEP)
+  const over = landed !== null || expired
 
-  // Once a blob is home, the next one comes out and the other player has a go.
+  // A blob that isn't caught in time slips away -- no point, next player's go.
   useEffect(() => {
-    if (landed === null) return
+    if (over || matchOver) return
     const timer = setTimeout(() => {
-      setLanded(null)
-      setMissed(false)
-      setBlob(newBlob())
-      setTurn((prev) => (prev + 1) % players)
-    }, 900)
+      setExpired(true)
+      setDrag(null)
+    }, timeLimit)
     return () => clearTimeout(timer)
-  }, [landed, players])
+  }, [blob, over, matchOver, timeLimit])
+
+  // Once a blob is caught or missed, the next one comes right out.
+  useEffect(() => {
+    if (!over) return
+    const timer = setTimeout(
+      () => {
+        setLanded(null)
+        setExpired(false)
+        setMissed(false)
+        setBlob(newBlob())
+        setTurn((prev) => (prev + 1) % players)
+      },
+      landed !== null ? 700 : 500
+    )
+    return () => clearTimeout(timer)
+  }, [over, landed, players])
 
   useEffect(() => {
     if (bumped === null) return
@@ -46,7 +69,7 @@ export default function DragSort({ players }) {
   }, [bumped])
 
   const start = (event) => {
-    if (landed !== null || matchOver) return
+    if (over || matchOver) return
     event.currentTarget.setPointerCapture(event.pointerId)
     setDrag({ sx: event.clientX, sy: event.clientY, x: event.clientX, y: event.clientY })
   }
@@ -57,7 +80,7 @@ export default function DragSort({ players }) {
   }
 
   const drop = (event) => {
-    if (!drag) return
+    if (!drag || expired) return
     setDrag(null)
     const index = bucketRefs.current.findIndex((node) => {
       if (!node) return false
@@ -87,6 +110,8 @@ export default function DragSort({ players }) {
     setTurn(0)
     setMissed(false)
     setLanded(null)
+    setExpired(false)
+    setDrag(null)
     setBlob(newBlob())
   }
 
@@ -111,10 +136,20 @@ export default function DragSort({ players }) {
         onPick={setPicking}
       />
 
+      {!matchOver && (
+        <div className="timer-track">
+          <div
+            key={blob.id}
+            className="timer-bar"
+            style={{ animationDuration: `${timeLimit}ms` }}
+          />
+        </div>
+      )}
+
       <div className="blob-shelf">
         {landed === null && (
           <button
-            className={`blob ${drag ? 'held' : ''}`}
+            className={`blob ${drag ? 'held' : ''} ${expired ? 'expired' : ''}`}
             style={{
               background: hexOf(blob.colorId),
               transform: drag
