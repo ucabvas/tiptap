@@ -85,7 +85,12 @@ const GAMES = [
     art: (
       <span className="tile-art sort-art">
         <i className="drop" style={{ background: '#2fb457' }} />
-        <i className="pot" style={{ background: '#2fb457' }} />
+        <span className="pots">
+          <i style={{ background: '#e63946' }} />
+          <i style={{ background: '#ffd60a' }} />
+          <i style={{ background: '#2fb457' }} />
+          <i style={{ background: '#1d75d6' }} />
+        </span>
       </span>
     ),
   },
